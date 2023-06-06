@@ -1,0 +1,90 @@
+﻿@page "/AddProducts"
+@using Microsoft.EntityFrameworkCore;
+@using Project.Components
+@using Project.Data;
+@using Project.Models;
+@using Microsoft.AspNetCore.Hosting;
+@inject IWebHostEnvironment env
+@attribute [Authorize]
+
+<PageTitle>Vertech - ADD</PageTitle>
+
+<link rel="stylesheet" href="/css/PageNavigation.css" type="text/css">
+<link rel="stylesheet" href="/css/AddProduct.css" type="text/css">
+
+<div class="titleDiv">
+    <h1>Add Products</h1>
+</div>
+@code{
+    public IBrowserFile IMG = null;
+}
+<CascadingAuthenticationState>
+<EditForm Model="@productForm" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label class="labels" for="name">Title:</label>
+        <InputText id="name" class="form-control" @bind-Value="@productForm.title" />
+        <ValidationMessage For="@(() => productForm.title)" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Price:</label>
+        <InputNumber id="email" class="form-control" @bind-Value="@productForm.price" />
+        <ValidationMessage For="@(() => productForm.price)" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Image:</label>
+            <InputFile OnChange="FileUpload" id="email" class="form-control" @bind-Value="@IMG" />
+    </div>
+
+    <button type="submit">Send</button>
+ 
+</EditForm>
+</CascadingAuthenticationState>
+
+<Footer/>
+
+@if(isSubmitted)
+{
+    <p>@message</p>   
+}
+<Footer />
+@code{
+    public Product productForm = new Product();
+    private bool isSubmitted = false;
+    public string message;
+    private void FileUpload(InputFileChangeEventArgs e)
+    {
+        IMG = e.File;
+    }
+    private async Task OnValidSubmit()
+    {
+        var fileName = IMG.Name;
+
+        // Set the file path to save the image
+        var imagePath = Path.Combine(env.WebRootPath, "images/ShopNowIMGs/Products", fileName);
+
+        // Save the file to the specified path
+        using (var stream = new FileStream(imagePath, FileMode.Create))
+        {
+            await IMG.OpenReadStream().CopyToAsync(stream);
+        }
+        Product add_product = new Product
+            {
+                title = productForm.title,
+                price = productForm.price,
+                img = IMG.Name
+            };
+        var options = new DbContextOptionsBuilder<ProductDbContext>().UseSqlServer("Data Source=DESKTOP-SB4HEO9;Initial Catalog=WebDB;Trusted_Connection=true;TrustServerCertificate=True;").Options;
+        var _context = new ProductDbContext(options);
+        _context.Add(add_product);
+        _context.SaveChangesAsync();
+        isSubmitted = true;
+        message = "Product Added Successfully!";
+        Console.WriteLine("I run");
+    }
+
+}

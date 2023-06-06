@@ -1,0 +1,47 @@
+﻿body {
+    background-color: white;
+    padding: 0;
+    margin: 0;
+}
+
+.NavigationBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    background-color: transparent;
+    color: white;
+}
+
+    .NavigationBar ul {
+        list-style-type: none;
+        float: right;
+        margin-top: 25px;
+        margin-bottom: 25px;
+        margin-right: 25px;
+    }
+
+ul li {
+    display: inline;
+}
+
+    ul li a {
+        text-decoration: none;
+        color: white;
+        padding: 5px 20px;
+        border: 1px solid transparent;
+        transition: 0.6s ease;
+        font-family: abel;
+        font-size: 17px;
+    }
+
+        ul li a:hover {
+            background-color: white;
+            color: black;
+        }
+
+        ul li a.activePage {
+            background-color: white;
+            color: black;
+        }

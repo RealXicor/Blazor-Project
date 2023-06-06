@@ -1,0 +1,119 @@
+﻿@page "/Inquire"
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.EntityFrameworkCore;
+@using Project.Components
+@using Project.Data;
+@using Project.Models;
+@inject NavigationManager NavigationManager;
+
+<link rel="stylesheet" href="/css/PageNavigation.css" type="text/css">
+<link rel="stylesheet" href="/css/AddProduct.css" type="text/css">
+
+<PageTitle>Vertech - Inquiry</PageTitle>
+
+<div class="titleDiv">
+    <h1>Inquire</h1>
+</div>
+
+<CascadingAuthenticationState>
+    <EditForm Model="@inquiryForm" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label class="labels" for="name">Name:</label>
+            <InputText id="name" class="form-control" @bind-Value="@inquiryForm.Name" />
+            <ValidationMessage For="@(() => inquiryForm.Name)" />
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <InputText id="email" class="form-control" @bind-Value="@inquiryForm.Email" />
+            <ValidationMessage For="@(() => inquiryForm.Email)" />
+        </div>
+        
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <InputText id="address" class="form-control" @bind-Value="@inquiryForm.Address" />
+            <ValidationMessage For="@(() => inquiryForm.Address)" />
+        </div>
+
+        <div class="form-group">
+            <label for="product">Product:</label>
+            <InputText id="product" class="form-control" @bind-Value="@inquiryForm.Title" />
+            <ValidationMessage For="@(() => inquiryForm.Title)" />
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price:</label>
+            <InputNumber id="price" class="form-control" @bind-Value="@inquiryForm.Price" />
+            <ValidationMessage For="@(() => inquiryForm.Price)" />
+        </div>
+
+        <div class="form-group">
+            <label for="msg">Message:</label>
+            <InputText id="msg" class="form-control" @bind-Value="@inquiryForm.Message" />
+            <ValidationMessage For="@(() => inquiryForm.Message)" />
+        </div>
+
+        <button type="submit">Inquire</button>
+
+    </EditForm>
+</CascadingAuthenticationState>
+
+@if(sent)
+{
+    <p>Inquiry Sent!</p>
+}
+
+<Footer/>
+
+@code {
+    [Parameter]
+    public string ProductTitle { get; set; }
+
+    public Boolean sent = false;
+
+    private Product searchedProduct;
+
+    private Inquiries inquiryForm = new Inquiries();
+
+    protected override void OnInitialized()
+    {
+        // Retrieve the query parameter value
+        var uri = new Uri(NavigationManager.Uri);
+        var queryParams = QueryHelpers.ParseQuery(uri.Query);
+        ProductTitle = queryParams["product"];
+        var options = new DbContextOptionsBuilder<ProductDbContext>().UseSqlServer("Data Source=DESKTOP-SB4HEO9;Initial Catalog=WebDB;Trusted_Connection=true;TrustServerCertificate=True;").Options;
+        var _context = new ProductDbContext(options);
+        searchedProduct = _context.Product.First(q => q.title.Equals(ProductTitle));
+        if (searchedProduct != null)
+        {
+            inquiryForm.Price = searchedProduct.price;
+            inquiryForm.Title = searchedProduct.title;
+        }
+        else
+        {
+            inquiryForm.Price = 0;
+            inquiryForm.Title = "";
+        }
+    }
+    private async Task OnValidSubmit()
+    {
+        var options = new DbContextOptionsBuilder<InquiriesDbContext>().UseSqlServer("Data Source=DESKTOP-SB4HEO9;Initial Catalog=WebDB;Trusted_Connection=true;TrustServerCertificate=True;").Options;
+        var _context = new InquiriesDbContext(options);
+        var new_inquiry = new Inquiries
+        {
+            Name = inquiryForm.Name,
+            Email = inquiryForm.Email,
+            Address = inquiryForm.Address,
+            Message = inquiryForm.Message,
+            Title = inquiryForm.Title,
+            Price = inquiryForm.Price
+        };
+        _context.Inquiries.Add(new_inquiry);
+        _context.SaveChangesAsync();
+        sent = true;
+    }
+
+}

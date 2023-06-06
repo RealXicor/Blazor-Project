@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Authorization
+
+<AuthorizeView>
+    <Authorized>
+        <nav>
+            <div class="NavigationBar">
+                <ul>
+                    <li><a href="@("/")">HOME</a></li>
+                    <li><a href="@("/ShopNow")">VIEW PRODUCTS</a></li>
+                    <li><a href="@("/AddProducts")">ADD PRODUCT</a></li
+                    <li><a href="@("/MyInquiries")">INQUIRIES</a></li>
+                    <li><a href="/Logout" class="activePage">LOGOUT</a></li>
+                </ul>
+            </div>
+        </nav>
+    </Authorized>
+    <NotAuthorized>
+        <nav>
+            <div class="NavigationBar">
+                <ul>
+                    <li><a href="@("/")">HOME</a></li>
+                    <li><a href="@("/ShopNow")">SHOP TECH</a></li>
+                    <li><a href="@("/AboutUs")">ABOUT</a></li>
+                    <li><a href="@("/ContactUs")">CONTACT US</a></li>
+                    <li><a href="/Identity/Account/Login" class="activePage">ADMIN LOGIN</a></li>
+                </ul>
+            </div>
+        </nav>
+    </NotAuthorized>
+</AuthorizeView>

@@ -1,0 +1,84 @@
+﻿.titleDiv {
+    font-family: abel;
+    color: black;
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+.titleDiv h1 {
+    margin-bottom: 5%;
+    font-family: abel;
+    font-weight: bold;
+    font-size: 45px;
+}
+.ProductGrid {
+    margin-top: -55px;
+    background-color: white;
+    color: black;
+    width: stretch;
+    height: auto;
+    padding: 20px 200px 20px 200px;
+}
+.ProductDiv {
+    float: left;
+    font-family: abel;
+    text-align: center;
+    padding: 15px 0px 15px 0px;
+    width: auto;
+    height: 500px;
+}
+.ProductDiv h3 {
+    margin-top: -10px;
+}
+.ProductDiv h2 {
+    font-weight: bold;
+}
+.ProductDiv img {
+    height: 300px;
+    width: 300px;
+}
+.ProductDiv button {
+    margin: auto;
+    width: 120px;
+    height: 50px;
+    font-family: abel;
+    font-size: 14px;
+    color: black;
+    background-color: transparent;
+    border: 1px solid black;
+}
+.hideElement {
+    display: none;
+}
+.ProductDiv:hover {
+    box-shadow: black 1px 1px 10px;
+    transition: 0.6s ease;
+    border: 1px solid black;
+}
+.ProductDiv:hover button:hover {
+    background-color: black;
+    color: white;
+    transition: 0.6s ease;
+}
+.ProductDiv:hover .hideElement{
+    display: inline;
+}
+.footerBlock {
+    background-color: black;
+    color: white;
+    font-family: abel;
+    font-size: 14px;
+    height: 60px;
+    text-align: center;
+    padding-top: 0px;
+    padding-bottom: 30px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+    .footerBlock img {
+        height: 85px;
+        width: auto;
+    }

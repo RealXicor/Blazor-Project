@@ -1,0 +1,52 @@
+﻿@page "/"
+@inject NavigationManager NV;
+
+<PageTitle>Vertech</PageTitle>
+
+<link rel="stylesheet" href="/css/HomeNavigationStyle.css" type="text/css">
+<link rel="stylesheet" href="/css/HomeStyle.css" type="text/css">
+
+<div class="introImg">
+    <img src="/images/1.jpg">
+</div>
+<div class="titleHeading">
+    <h1>VERTECH</h1>
+</div>
+<div class="buttonDiv">
+    <AuthorizeView>
+        <Authorized>
+            <button type="button">LEARN MORE</button>
+        </Authorized>
+        <NotAuthorized>
+            <button type="button" @onclick="@GoToAbout">LEARN MORE</button>
+        </NotAuthorized>
+    </AuthorizeView>
+    <button type="button" id="exploreBtn" @onclick="@GoToShop">EXPLORE</button>
+</div>
+<div class="sliderTitle">
+    <h1>WHAT'S TRENDING</h1>
+</div>
+<div class="sliderBody">
+    <img src="/images/macbook1.png" class="SlideIMG" alt="SlidingImage">
+    <img src="/images/iPhoneSE.png" class="SlideIMG" alt="SlidingImage">
+    <img src="/images/AirPodsMAX.png" class="SlideIMG" alt="SlidingImage">
+    <img src="/images/AirPodsPRO.png" class="SlideIMG" alt="SlidingImage">
+    <button class="LEFT-B" onclick="nextIMG(-1)">&#10094;</button>
+    <button class="RIGHT-B" onclick="nextIMG(1)">&#10095;</button>
+
+</div>
+<div class="footerBlock">
+    <a href="https://www.facebook.com" target="blank"><img src="/images/FB-icon.png" /></a>
+    <a href="https://www.twitter.com" target="blank"><img src="/images/TW-icon.png" /></a>
+    <a href="https://www.instagram.com" target="blank"><img src="/images/IG-icon.png" /></a>
+</div>
+@code{
+    private void GoToShop()
+    {
+        NV.NavigateTo("/ShopNow");
+    }
+    private void GoToAbout()
+    {
+        NV.NavigateTo("/AboutUs");
+    }
+}

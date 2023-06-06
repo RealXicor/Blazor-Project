@@ -1,0 +1,76 @@
+﻿@page "/ShopNow"
+@using Microsoft.EntityFrameworkCore;
+@using Project.Components
+@using Project.Data;
+@using Project.Models;
+@inject NavigationManager NavigationManager;
+
+<PageTitle>VERTECH - Shop</PageTitle>
+
+<link rel="stylesheet" href="/css/PageNavigation.css" type="text/css">
+<link rel="stylesheet" href="/css/ShopNowStyle.css" type="text/css">
+
+@code
+{
+    private List<Product> all_products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var options = new DbContextOptionsBuilder<ProductDbContext>().UseSqlServer("Data Source=DESKTOP-SB4HEO9;Initial Catalog=WebDB;Trusted_Connection=true;TrustServerCertificate=True;").Options;
+        var _context = new ProductDbContext(options);
+        all_products = _context.Product.ToList();
+    }
+}
+
+<div class="titleDiv">
+    <AuthorizeView>
+        <Authorized>
+            <h1>My Products</h1>
+        </Authorized>
+        <NotAuthorized>
+            <h1>SHOP NOW</h1>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+<div class="ProductGrid">
+    @foreach(var product in all_products)
+    {
+        <div class="ProductDiv">
+            <img src="/images/ShopNowIMGs/Products/@product.img" /><br />
+            <h2>@product.title</h2>
+            <h3>Rs. @product.price</h3>
+            <AuthorizeView>
+                <Authorized>
+                    <button class="hideElement" @onclick="() => EditProduct(product.title)" type="button">EDIT</button>
+                    <button class="hideElement" @onclick="() => DeleteProduct(product.title)" type="button">DELETE</button>
+                </Authorized>
+                <NotAuthorized>
+                    <button class="hideElement" @onclick="() => Inquire(product.title)" type="button">INQUIRE</button>
+                </NotAuthorized>
+            </AuthorizeView>
+            
+        </div>
+    }
+</div>
+
+<Footer />
+@code
+{
+    private void EditProduct(string title)
+    {
+        NavigationManager.NavigateTo($"/EditProduct?data=" + title);
+    }
+    private void DeleteProduct(string title)
+    {
+        var options = new DbContextOptionsBuilder<ProductDbContext>().UseSqlServer("Data Source=DESKTOP-SB4HEO9;Initial Catalog=WebDB;Trusted_Connection=true;TrustServerCertificate=True;").Options;
+        var _context = new ProductDbContext(options);
+        var to_delete = _context.Product.First(q => q.title.Equals(title));
+        _context.Product.Remove(to_delete);
+        _context.SaveChangesAsync();
+        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+    }
+    private void Inquire(string title)
+    {
+        NavigationManager.NavigateTo($"/Inquire?product=" + title);
+    }
+}

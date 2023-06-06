@@ -1,0 +1,70 @@
+﻿@page "/ContactUs"
+@using Project.Components
+@using Project.Models
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>VERTECH - Contact Us</PageTitle>
+
+<link rel="stylesheet" href="/css/PageNavigation.css" type="text/css" />
+<link rel="stylesheet" href="/css/ContactUs.css" type="text/css">
+
+<h1>Contact Us</h1>
+
+
+<EditForm Model="@contactForm" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />m
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label class="labels" for="name">Name:</label>
+        <InputText id="name" class="form-control" @bind-Value="@contactForm.name" />
+        <ValidationMessage For="@(() => contactForm.name)" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <InputText id="email" class="form-control" @bind-Value="@contactForm.email" />
+        <ValidationMessage For="@(() => contactForm.email)" />
+    </div>
+
+    <div class="form-group">
+        <label for="subject">Subject:</label>
+        <InputText id="subject" class="form-control" @bind-Value="@contactForm.subject" />
+        <ValidationMessage For="@(() => contactForm.subject)" />
+    </div>
+
+    <div class="form-group">
+        <label for="message">Message:</label>
+        <InputTextArea id="message" class="form-control" @bind-Value="@contactForm.message" />
+        <ValidationMessage For="@(() => contactForm.message)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Send</button>
+ 
+</EditForm>
+@if(isSubmitted)
+{
+    <p>@message</p>   
+}
+
+
+
+
+
+<Footer />
+@code{
+    private ContactForm contactForm = new ContactForm();
+    private bool isSubmitted = false;
+    public string message;
+
+
+    private void OnValidSubmit()
+    {
+
+        isSubmitted = true;
+        message = "Form submitted successfully!";
+        Console.WriteLine("I run");
+
+    }
+
+}

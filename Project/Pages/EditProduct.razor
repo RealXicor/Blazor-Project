@@ -1,0 +1,118 @@
+﻿@page "/EditProduct"
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.EntityFrameworkCore;
+@using Project.Components
+@using Project.Data;
+@using Project.Models;
+@inject NavigationManager NavigationManager;
+@inject IWebHostEnvironment env
+
+<link rel="stylesheet" href="/css/PageNavigation.css" type="text/css">
+<link rel="stylesheet" href="/css/AddProduct.css" type="text/css">
+
+<PageTitle>Edit Product</PageTitle>
+
+<div class="titleDiv">
+    <h1>Edit Products</h1>
+</div>
+
+@code {
+    public IBrowserFile IMG = null;
+}
+<EditForm Model="@productForm" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label class="labels" for="name">Title:</label>
+        <InputText id="name" class="form-control" @bind-Value="@productForm.title" />
+        <ValidationMessage For="@(() => productForm.title)" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Price:</label>
+        <InputNumber id="email" class="form-control" @bind-Value="@productForm.price" />
+        <ValidationMessage For="@(() => productForm.price)" />
+    </div>
+
+    <div class="form-group">
+        <label for="email">Image:</label>
+        <InputFile OnChange="FileUpload" id="email" class="form-control" @bind-Value="@IMG" />
+    </div>
+
+    <button type="submit">Send</button>
+
+</EditForm>
+<Footer/>
+
+@code {
+    [Parameter]
+    public string ProductToEdit { get; set; }
+
+    public Product productForm = new Product();
+
+    public Product searchedProduct;
+
+    protected override void OnInitialized()
+    {
+        // Retrieve the query parameter value
+        var uri = new Uri(NavigationManager.Uri);
+        var queryParams = QueryHelpers.ParseQuery(uri.Query);
+        ProductToEdit = queryParams["data"];
+        var options = new DbContextOptionsBuilder<ProductDbContext>().UseSqlServer("Data Source=DESKTOP-SB4HEO9;Initial Catalog=WebDB;Trusted_Connection=true;TrustServerCertificate=True;").Options;
+        var _context = new ProductDbContext(options);
+        searchedProduct = _context.Product.First(q => q.title.Equals(ProductToEdit));
+        if(searchedProduct != null)
+        {
+            productForm.price = searchedProduct.price;
+            productForm.title = searchedProduct.title;
+            productForm.img = searchedProduct.img;
+        }
+        else
+        {
+            productForm.price = 0;
+            productForm.title = "";
+            productForm.img = "";
+        }
+    }
+    private bool isSubmitted = false;
+    public string message;
+    private void FileUpload(InputFileChangeEventArgs e)
+    {
+        IMG = e.File;
+    }
+    private async Task OnValidSubmit()
+    {
+        if (IMG != null)
+        {
+            var fileName = IMG.Name;
+
+            // Set the file path to save the image
+            var imagePath = Path.Combine(env.WebRootPath, "images/ShopNowIMGs/Products", fileName);
+
+            // Save the file to the specified path
+            using (var stream = new FileStream(imagePath, FileMode.Create))
+            {
+                await IMG.OpenReadStream().CopyToAsync(stream);
+            }
+            var options = new DbContextOptionsBuilder<ProductDbContext>().UseSqlServer("Data Source=DESKTOP-SB4HEO9;Initial Catalog=WebDB;Trusted_Connection=true;TrustServerCertificate=True;").Options;
+            var _context = new ProductDbContext(options);
+            var get_product = _context.Product.First(q => q.title.Equals(searchedProduct.title));
+            get_product.title = productForm.title;
+            get_product.price = productForm.price;
+            get_product.img = IMG.Name;
+            _context.SaveChangesAsync();
+        }
+        else
+        {
+            var options = new DbContextOptionsBuilder<ProductDbContext>().UseSqlServer("Data Source=DESKTOP-SB4HEO9;Initial Catalog=WebDB;Trusted_Connection=true;TrustServerCertificate=True;").Options;
+            var _context = new ProductDbContext(options);
+            var get_product = _context.Product.First(q => q.title.Equals(searchedProduct.title));
+            get_product.title = productForm.title;
+            get_product.price = productForm.price;
+            get_product.img = productForm.img;
+            _context.SaveChangesAsync();
+        }
+        NavigationManager.NavigateTo("/ShopNow");
+    }
+}

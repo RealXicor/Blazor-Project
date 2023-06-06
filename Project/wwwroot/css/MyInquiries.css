@@ -1,0 +1,34 @@
+﻿.titleDiv {
+    font-family: abel;
+    color: black;
+    margin-top: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.titleDiv h1 {
+    margin-bottom: 5%;
+    font-family: abel;
+    font-weight: bold;
+    font-size: 45px;
+}
+
+.footerBlock {
+    background-color: black;
+    color: white;
+    font-family: abel;
+    font-size: 14px;
+    height: 60px;
+    text-align: center;
+    padding-top: 0px;
+    padding-bottom: 30px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footerBlock img {
+    height: 85px;
+    width: auto;
+}

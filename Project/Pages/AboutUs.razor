@@ -1,0 +1,26 @@
+﻿@page "/AboutUs"
+@using Project.Components
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>About Us</PageTitle>
+
+<link rel="stylesheet" href="/css/PageNavigation.css" type="text/css">
+<link rel="stylesheet" href="/css/AboutUsStyle.css" type="text/css">
+
+<div class="AboutUsOverlay">
+    <h1>ABOUT US</h1>
+    <p>VERTECH is a leading online store for lat
+        est tech products and tech news. From providing top quality products to 24/7 customer support, Vertch covers it all. Daily updation of news and products.</p>
+    <p>We promise our customers with a quality that no one else offers. Also, all of our products come with a one year warranty that can be claimed anywhere within Pakistan.</p>
+    <button type="button" id="backHomeBtn" @onclick="@NavigateToHome">BACK TO HOME</button>
+</div>
+
+@code {
+    void NavigateToHome()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+} 
+
+<Footer />

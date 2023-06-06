@@ -1,0 +1,62 @@
+﻿@page "/MyInquiries"
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.EntityFrameworkCore;
+@using Project.Components
+@using Project.Data;
+@using Project.Models;
+@inject NavigationManager NavigationManager;
+@attribute [Authorize]
+
+<link rel="stylesheet" href="/css/PageNavigation.css" type="text/css">
+<link rel="stylesheet" href="/css/MyInquiries.css" type="text/css">
+
+<PageTitle>Vertech - Inquiry</PageTitle>
+
+<div class="titleDiv">
+    <h1>My Inquiries</h1>
+</div>
+
+@if (inquiries == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Message</th>
+                <th>Product</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var inquiry in inquiries)
+            {
+                <tr>
+                    <td>@inquiry.Name</td>
+                    <td>@inquiry.Email</td>
+                    <td>@inquiry.Address</td>
+                    <td>@inquiry.Message</td>
+                    <td>@inquiry.Title</td>
+                    <td>@inquiry.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<Footer />
+
+@code {
+    List<Inquiries> inquiries = new List<Inquiries>();
+    protected override void OnInitialized()
+    {
+        var options = new DbContextOptionsBuilder<InquiriesDbContext>().UseSqlServer("Data Source=DESKTOP-SB4HEO9;Initial Catalog=WebDB;Trusted_Connection=true;TrustServerCertificate=True;").Options;
+        var _context = new InquiriesDbContext(options);
+        inquiries = _context.Inquiries.ToList();
+    }
+}
